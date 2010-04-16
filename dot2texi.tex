@@ -1,0 +1,535 @@
+\documentclass[a4paper]{ltxdoc}
+
+\usepackage[outputdir={docgraphs/},cache]{dot2texi}
+\usepackage{paralist}
+\usepackage{tikz,hyperref}
+\usetikzlibrary{shapes,arrows,automata}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.footprints}
+\newcommand\packagename{\texttt{dot2texi}}
+
+\title{The \texttt{dot2texi} package}
+\author{Kjell Magne Fauske\\\footnotesize{\url{http://www.fauskes.net/}}}
+\date{Version 3.0}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The \packagename\ package allows you to embed graphs written the DOT description language directly in your document. The dot2tex\footnote{Available from: \url{http://www.fauskes.net/code/dot2tex/}}\footnote{and \url{http://www.ctan.org/tex-archive/help/Catalogue/entries/dot2tex.html}} tool is used to transform the output from Graphviz to \LaTeX\ code using either the TikZ and PGF package, or the PSTricks package. The generated code can then be included directly in you document. This package can automate the process if shell escape is enabled.
+\\
+
+\noindent
+This package is derived from the dottex\footnote{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/dottex.html}} and gnuplottex\footnote{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/gnuplottex.html}} packages written by Lars Kotthoff.
+
+\section{Requirements}
+
+To run \packagename\ the following packages are required:
+\begin{itemize}
+    \item \texttt{xkeyval} version 2.3 or later required.
+    \item \texttt{moreverb}
+    \item PGF or PSTricks
+\end{itemize}
+In addition, the following external tools are required:
+\begin{itemize}
+    \item Graphviz
+    \item dot2tex ( Version 2.7.0 or later recommended). The dot2texi package assumes that dot2tex is installed somewhere on the system path.
+\end{itemize}
+
+
+\noindent
+For automatic creating of code, \TeX\ must be configured to allow calling of external programs. This feature is a potential security risk and is therefore usually disabled by default. You can enable this feature by specifying an option to \TeX\ when compiling the document. For \texttt{pdflatex} the option is \verb|--shell-escape|. On some systems the option is called \verb|--enable-write18|.
+
+\section{Support}
+
+If you have any questions or comments, send an email to \url{kjellmf@gmail.com} or use the mailing list available at \url{http://groups.google.com/group/dot2tex-users/}.
+
+\section{Usage}
+
+The package is loaded by writing \cmd{\usepackage\{dot2texi\}} in the document preamble.
+
+\section{Package options}
+
+The following package options are recognized:
+
+\begin{description}
+\item[\oarg{shell}] Use shell escape to automatically generate \TeX code using do2tex. This is the default behavior.
+\item[\oarg{noshell}] Disable shell escape. Note that you can locally  enable and disable shell escape for each \texttt{dot2tex} environment.
+\item[\oarg{forceshell}] Force shell escape. Will run \texttt{dot2tex} on graphs even if they locally use the \oarg{noshell} option.
+\item[\oarg{miktex}] MikTeX compatibility mode.
+\item[\oarg{debug}] Invoke \texttt{dot2tex} in debug mode.
+\item[\oarg{autosize}] Invoke \texttt{dot2tex} with the \texttt{--autosize} option. Will preprocess the graph using the preview package and adjust node and edge label sizes so that they fit the LaTeX output.
+\item[\oarg{outputdir=dir}] Set a directory where the generated graph code will be stored. The default is to put the files in the current directory. The \emph{outputdir} value should have a trailing slash to ensure that it is interpreted as a directory. Example:
+\begin{verbatim}
+\usepackage[outputdir={docgraphs/}]
+...
+\end{verbatim}
+\end{description}
+
+\subsection{Output format}
+
+\begin{description}
+\item[\oarg{tikz}] Use the tikz output format. This is the default output format.
+\item[\oarg{pgf}] Use the pgf output format.
+\item[\oarg{pstricks}] Use the pstricks output format.
+\end{description}
+
+\subsection{Graph layout}
+Set the default graph layout tool
+\begin{description}
+\item[\oarg{dot}] Hierarchical layout
+\item[\oarg{neato}] Spring model layot
+\item[\oarg{circo}] Circular layout
+\item[\oarg{fdp}] Spring model layout
+\item[\oarg{twopi}] Radial layout
+\end{description}
+
+\section{Macros}
+
+\DescribeMacro{\setoutputdir}
+Set a directory where the generated graph code will be stored. Does the same as the \oarg{outputdir} package option. Useful if you want to organize your graphs in different directories. Example:
+\begin{verbatim}
+\documentclass{report}
+\usepackage{dot2texi}
+\begin{document}
+...
+\chapter{Chapter A}
+\setoutputdir{chapA/}
+....
+\chapter{Chapter B}
+\setoutputdir{chapB/}
+...
+\end{document}
+\end{verbatim}
+
+
+
+\section{The \texttt{dot2tex} environment}
+\DescribeEnv{dot2tex}
+The \packagename\ package defines the \texttt{dot2tex} environment. The contents of the environment will be written to file during compilation. If shell escape is enabled the \texttt{dot2tex} tool and Graphviz will then be run on the saved file. This process generates \LaTeX\ code that will be included automatically during compilation.
+
+\subsection{Environment options}
+
+Most of the package options can also be used in the dot2tex environment. They will then locally override the package options.
+
+\begin{description}
+\item[\oarg{shell}] Enable shell escape for the current graph.
+\item[\oarg{noshell}] Disable shell escape for the current graph.
+\end{description}
+Output formats:
+\begin{description}
+\item[\oarg{tikz}] Use the tikz output format.
+\item[\oarg{pgf}] Use the pgf output format.
+\item[\oarg{pstricks}] Use the pstricks output format.
+\item[\oarg{format=outputformat}] Set output format. Allowed values are {\verb#tikz|pgf|pstricks#}.
+\end{description}
+Graph layout:
+\begin{description}
+\item[\oarg{dot}] Hierarchical layout
+\item[\oarg{neato}] Spring model layot
+\item[\oarg{circo}] Circular layout
+\item[\oarg{fdp}] Spring model layout
+\item[\oarg{twopi}] Radial layout
+\item[\oarg{prog=layouttool}] Set program to use for graph layout. Allowed values are {\verb#dot|neato|circo|fdp|twopi#}.
+\end{description}
+Files:
+\begin{description}
+\item[\oarg{outputdir=dir}] Locally override the \oarg{outputdir} package option value.
+\item[\oarg{file=filename}] Set the base name of the generated \texttt{dot} and \texttt{tex} file. The name is generated automatically, but this option lets you override the default file name. Example:
+\begin{verbatim}
+\begin{dot2tex}[file=mygraph]
+...
+\end{dot2tex}
+\end{verbatim}
+Compiling the above code will generate the files \texttt{mygraph.dot} and \texttt{mygraph.tex}. Note that the \texttt{dot} and \texttt{tex} extensions are added automatically. Here is another example:
+\begin{verbatim}
+\begin{dot2tex}[file=graphs/minimal]
+...
+\end{dot2tex}
+\end{verbatim}
+The above code will generate the files \texttt{minimal.dot} and \texttt{minimal.tex} in the \texttt{graphs} directory.
+
+\emph{Note:} If the file name contains spaces or other special characters use:
+\begin{verbatim}
+\begin{dot2tex}[file="name with spaces"]
+...
+\end{verbatim}
+
+\emph{Note:} If the \oarg{outputdir} option is set, its value will be prepended.
+\end{description}
+Options:
+\begin{description}
+\item[\oarg{options=opts}] Pass additional command line options to \texttt{dot2tex}. See the dot2tex documentation\footnote{\url{http://www.fauskes.net/code/dot2tex/documentation/}} for available options.
+
+\emph{Note}. If opts contains an equal sign,=, you have to put opts inside curly brackets. Example:
+\begin{verbatim}
+\begin{dot2tex}[options=--graphstyle "scale=0.25"]
+graph G {
+...
+}
+\end{dot2tex}
+\end{verbatim}
+The above code will not work because opts i parsed incorrectly. Instead you have to write:
+\begin{verbatim}
+\begin{dot2tex}[options={--graphstyle "scale=0.25"}]
+graph G {
+...
+}
+\end{dot2tex}
+\end{verbatim}
+\item[\oarg{autosize}] Run \texttt{dot2tex} with the \texttt{--autosize} option.
+\item[\oarg{noautosize}] Locally override the package \oarg{autosize} option.
+\item[\oarg{codeonly}] Run \texttt{dot2tex} with the \texttt{--codeonly} option. The generated code will then not be wrapped inside a \texttt{tikzpicture} or \texttt{pspicture} environment. Note that this option requires \texttt{dot2tex} version 2.7.0 or later.
+\item[\oarg{graphstyle=style}] Set the \texttt{<<graphstyle>>} template variable. For the default templates the style value will be inserted as:
+\begin{verbatim}
+...
+\begin{tikzpicture}[<<graphstyle>>]
+...
+\end{tikzpicture}
+..
+\end{verbatim}
+Use this option to set styles that affect all of the graph. Example:
+\begin{verbatim}
+...
+\begin{dot2tex}[graphstyle={scale=0.5,transform shape}]
+...
+\end{dot2tex}
+...
+\end{verbatim}
+The above style value will scale down the graph to half its size.
+
+\emph{Note:} Use curly braces around the style value to avoid confusing the xkeyval parser.
+
+\item[\oarg{mathmode}] Run \texttt{dot2tex} with tex mode set to math. This means that labels are interpreted as math.
+
+\item[\oarg{scale=factor}] Scale the graph by a factor. 
+
+\emph{Note:} This is an experimental feature. Currently writing \texttt{scale=0.5} is equivalent to \texttt{graphstyle=\{scale=0.5,transform shape\}}. Will not work for the pstricks output format or if the \texttt{codeonly} option is used.
+
+\item[\oarg{straightedges}] Run \texttt{dot2tex} with the \texttt{--straightedges} option.
+\item[\oarg{styleonly}] Run \texttt{dot2tex} with the \texttt{--styleonly} option. Only works with the \texttt{tikz} output format. Uses only styles when drawing nodes. No draw or shape option is added.
+
+\item[\oarg{tikzedgelabels}] Run \texttt{dot2tex} with the \texttt{--tikzedgelabels} option.
+
+\end{description}
+
+\noindent
+\emph{Warning:} All of the options are passed to dot2tex as command line options. If an option is given multiple times, the last one will win. One side effect of this is that you can't use both the \texttt{scale} and \texttt{graphstyle} at the same time. Example: 
+\begin{verbatim}
+...
+\begin{dot2tex}[scale=0.5,graphstyle={shorten >=5pt}]
+...
+\end{dot2tex}
+...
+\end{verbatim}
+In the above code the \texttt{graphstyle} option will win. If you interchange the options, the \texttt{graphstyle} option will have no effect. 
+
+\section{Examples}
+\begin{center}
+\begin{dot2tex}[prog=neato,mathmode]
+digraph G {
+    node [shape="circle"];
+  a_1 -> a_2 -> a_3 -> a_4 -> a_1;
+}
+\end{dot2tex}
+\end{center}
+\noindent
+The minimal code required to generate the above graph is:
+
+\begin{verbatim}
+\documentclass{article}
+\usepackage{dot2texi}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+\begin{dot2tex}[neato,mathmode]
+  digraph G {
+    node [shape="circle"];
+    a_1 -> a_2 -> a_3 -> a_4 -> a_1;
+    }
+\end{dot2tex}
+
+\end{document}
+\end{verbatim}
+
+\noindent
+Now an example that uses several TikZ features:
+
+\begin{center}
+\tikzstyle{ball} = [shape=circle, minimum size=.5cm]
+\begin{dot2tex}[straightedges,fdp,styleonly]
+graph G {
+    node [style="ball, ball color =green", label=""];
+    edge [style="decorate,decoration=zigzag, green,thick"];
+    a_1 -- c -- a_2;
+    c [style="ball, ball color=black"];
+    edge [style="decorate,decoration=snake, blue"];
+    node [style="ball, ball color = red", label=""];
+    a_3 -- c -- a_4 --a_3;
+}
+\end{dot2tex}
+\end{center}
+
+
+\begin{verbatim}
+\documentclass{article}
+\usepackage{dot2texi}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{decorations.pathmorphing}
+
+\begin{document}
+\tikzstyle{ball} = [shape=circle, minimum size=.5cm]
+\begin{dot2tex}[straightedges,fdp,styleonly]
+graph G {
+    node [style="ball, ball color =green", label=""];
+    edge [style="decorate,decoration=zigzag, green,thick"];
+    a_1 -- c -- a_2;
+    c [style="ball, ball color=black"];
+    edge [style="decorate,decoration=snake, blue"];
+    node [style="ball, ball color = red", label=""];
+    a_3 -- c -- a_4 --a_3;
+}
+\end{dot2tex}
+\end{document}
+\end{verbatim}
+
+\noindent
+The next example shows that the \oarg{codeonly} environment option is useful when you want to adjust and annotate the generated graph. Note that you manually have to wrap the code inside a figure environment, but this gives you a lot of flexibility. When using the \texttt{tikz} output format, you can later access the nodes.
+
+% Define layers
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+% The scale option is useful for adjusting spacing between nodes.
+% Note that this works best when straight lines are used to connect
+% the nodes.
+\begin{tikzpicture}[>=latex',scale=0.8]
+    % set node style
+    \tikzstyle{n} = [draw,shape=circle,minimum size=2em,
+                        inner sep=0pt,fill=red!20]
+    \begin{dot2tex}[dot,codeonly,styleonly,options=-s -tmath]
+        digraph G  {
+            node [style="n"];
+            A_1 -> B_1; A_1 -> B_2; A_1 -> B_3;
+            B_1 -> C_1; B_1 -> C_2;
+            B_2 -> C_2; B_2 -> C_3;
+            B_3 -> C_3; B_3 -> C_4;
+        }
+    \end{dot2tex}
+    % annotations
+    \node[left=1em] at (C_1.west)  (l3) {Level 3};
+    \node at (l3 |- B_1) (l2){Level 2};
+    \node at (l3 |- A_1) (l1) {Level 1};
+    % Draw lines to separate the levels. First we need to calculate
+    % where the middle is.
+    \path (l3) -- coordinate (l32) (l2) -- coordinate (l21) (l1);
+    \draw[dashed] (C_1 |- l32) -- (l32 -| C_4);
+    \draw[dashed] (C_1 |- l21) -- (l21 -| C_4);
+    \draw[<->,red] (A_1) to[out=-120,in=90] (C_2);
+    % Highlight the A_1 -> B_1 -> C_2 path. Use layers to draw
+    % behind everything.
+    \begin{pgfonlayer}{background}
+        \draw[rounded corners=2em,line width=3em,blue!20,cap=round]
+                (A_1.center) -- (B_1.west) -- (C_2.center);
+    \end{pgfonlayer}
+\end{tikzpicture}
+
+\begin{verbatim}
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+\usepackage{dot2texi}
+\begin{document}
+% Define layers
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+% The scale option is useful for adjusting spacing between nodes.
+% Note that this works best when straight lines are used to connect
+% the nodes.
+\begin{tikzpicture}[>=latex',scale=0.8]
+    % set node style
+    \tikzstyle{n} = [draw,shape=circle,minimum size=2em,
+                        inner sep=0pt,fill=red!20]
+    \begin{dot2tex}[dot,tikz,codeonly,styleonly,options=-s -tmath]
+        digraph G  {
+            node [style="n"];
+            A_1 -> B_1; A_1 -> B_2; A_1 -> B_3;
+            B_1 -> C_1; B_1 -> C_2;
+            B_2 -> C_2; B_2 -> C_3;
+            B_3 -> C_3; B_3 -> C_4;
+        }
+    \end{dot2tex}
+    % annotations
+    \node[left=1em] at (C_1.west)  (l3) {Level 3};
+    \node at (l3 |- B_1) (l2){Level 2};
+    \node at (l3 |- A_1) (l1) {Level 1};
+    % Draw lines to separate the levels. First we need to calculate
+    % where the middle is.
+    \path (l3) -- coordinate (l32) (l2) -- coordinate (l21) (l1);
+    \draw[dashed] (C_1 |- l32) -- (l32 -| C_4);
+    \draw[dashed] (C_1 |- l21) -- (l21 -| C_4);
+    \draw[<->,red] (A_1) to[out=-120,in=90] (C_2);
+    % Highlight the A_1 -> B_1 -> C_2 path. Use layers to draw
+    % behind everything.
+    \begin{pgfonlayer}{background}
+        \draw[rounded corners=2em,line width=3em,blue!20,cap=round]
+                (A_1.center) -- (B_1.west) -- (C_2.center);
+    \end{pgfonlayer}
+\end{tikzpicture}
+\end{document}
+\end{verbatim}
+
+\noindent
+The next example uses the \texttt{automata} library to create a nice looking state machine:
+\begin{center}
+\begin{tikzpicture}[
+    every state/.style={draw=blue!50,very thick,fill=blue!20}]
+\begin{dot2tex}[styleonly,codeonly,neato,tikzedgelabels]
+digraph G {
+    node [style="state"];
+    edge [lblstyle="auto",topath="bend left"];
+    A [style="state, initial"];
+    A -> B [label=2];
+    A -> D [label=7];
+    B -> A [label=1];
+    B -> B [label=3,topath="loop above"];
+    B -> C [label=4];
+    C -> F [label=5];
+    F -> B [label=8];
+    F -> D [label=7];
+    D -> E [label=2];
+    E -> A [label="1,6"];
+    F [style="state,accepting"];
+}
+\end{dot2tex}
+\end{tikzpicture}
+\end{center}
+
+\begin{verbatim}
+\documentclass{article}
+\usepackage{dot2texi}
+\usepackage{tikz}
+\usetikzlibrary{automata,shapes}
+\begin{document}
+\begin{tikzpicture}[
+    every state/.style={draw=blue!50,very thick,fill=blue!20}]
+\begin{dot2tex}[styleonly,codeonly,neato]
+digraph G {
+    d2ttikzedgelabels = true;
+    node [style="state"];
+    edge [lblstyle="auto",topath="bend left"];
+    A [style="state, initial"];
+    A -> B [label=2];
+    A -> D [label=7];
+    B -> A [label=1];
+    B -> B [label=3,topath="loop above"];
+    B -> C [label=4];
+    C -> F [label=5];
+    F -> B [label=8];
+    F -> D [label=7];
+    D -> E [label=2];
+    E -> A [label="1,6"];
+    F [style="state,accepting"];
+}
+\end{dot2tex}
+\end{tikzpicture}
+\end{document}
+\end{verbatim}
+
+\noindent
+Another example of using the special \texttt{topath} attribute. Note the use of the \texttt{graphstyle} option to shorten the edges.
+
+\begin{center}
+\begin{dot2tex}[circo,graphstyle={shorten >=1pt,shorten <=1pt}]
+digraph G {
+    mindist = 0.5;
+    node [shape="circle"];
+    a -> b [topath="bend right"];
+    c -> b [topath="bend left"];
+    c -> a [topath="out=10,in=-90"];
+    b -> b [topath="loop above"];
+}
+\end{dot2tex}
+\end{center}
+\begin{verbatim}
+\documentclass{article}
+\usepackage{dot2texi}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+\begin{dot2tex}[circo,graphstyle={shorten >=1pt,shorten <=1pt}]
+digraph G {
+    mindist = 0.5;
+    node [shape="circle"];
+    a -> b [topath="bend right"];
+    c -> b [topath="bend left"];
+    c -> a [topath="out=10,in=-90"];
+    b -> b [topath="loop above"];
+}
+\end{dot2tex}
+
+\end{document}
+\end{verbatim}
+\section{Tips and tricks}
+
+\begin{itemize}
+\item Generating the graphs can be quite time consuming. The \texttt{shell} and \texttt{noshell} environment options are very useful when working with documents with many graphs.
+\item Use the \texttt{outputdir} package option to organize your files.
+\end{itemize}
+
+\subsection{External files}
+
+Sometimes it is practical to keep a dot graph in a separate file, for instance when the graph is automatically generated. Dot2tex version 2.8 or later supports an inclusion mechanism similar to \LaTeX's. If a graph contains only the line \verb|\input{filename.dot}| it will load \texttt{filename.dot} and convert it. Here is an example:
+
+\begin{verbatim}
+...
+\begin{dot2tex}
+\input{externalgraph.dot}
+\end{dot2tex}
+..
+\end{verbatim}
+
+
+\section{Changelog}
+
+\begin{itemize}
+\item Version 3.0 (2008-05-07)
+\begin{itemize}
+    \item Updated documentation examples to use PGF 2.00.
+    \item Added the experimental \texttt{scale} environment option. 
+    \item Added the \texttt{graphstyle} environment option.
+    \item Added the \texttt{mathmode} environment option.
+    \item Added the \texttt{tikzedgelabels} environment option.
+    \item Added the \texttt{straightedges} environment option.
+    \item Added the \texttt{outputdir} option and \texttt{$\backslash$setoutputdir} macro.
+    \item Added the \texttt{file} environment option.
+\end{itemize}
+
+\item Version 2.0 (2007-12-09)
+    \begin{itemize}
+        \item Updated documentation.
+        \item It is now not necessary for Windows users to specify the \texttt{miktex} option. Platform is now detected automatically.
+        \item Added the \texttt{forceshell} package option.
+        \item Added the \texttt{codeonly} environment option.
+        \item Added the \texttt{styleonly} environment option.
+        \item Added the \texttt{autosize} and \texttt{noautosize} option.
+    \end{itemize}
+\item Version 1.0. Initial release
+\end{itemize}
+
+\section*{Acknowledgements}
+
+Thanks to Lars Kotthoff for writing the excellent dottex and gnuplottex packages. The platform detection code is based on the ifplatform\footnote{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/ifplatform.html}} package written by Will Robertson and Johannes Gro{\ss}e.
+
+Thanks to all users for valuable feedback and suggestions! A special thanks to Rolf Niepraschk for pointing me to the dottex and ifplatform packages.
+
+
+\end{document}

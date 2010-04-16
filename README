@@ -1,0 +1,27 @@
+This package allows you to include graphs in the DOT graph description language
+in your LaTeX documents. The dot2tex[1] tool is used to invoke Graphviz[2] for
+graph layout, and to transform the output from Graphviz to LaTeX code.
+The generated code relies on the TikZ and PGF package or the PSTricks package.
+
+Licensed under the GPL.
+Author: Kjell Magne Fauske
+
+Dot2tex can be downloaded from: http://www.fauskes.net/code/dot2tex/download/
+or CTAN: http://www.ctan.org/tex-archive/help/Catalogue/entries/dot2tex.html
+It is also available as binary packages for Debian and OpenSUSE.
+
+New in version 3.0
+------------------
+
+- Added the outputdir option. Allows you to specify where to put
+  generated files.
+- Added the file environment option. Allows you to set the file name of
+  a generated graph.
+- Added the tikzedgelabels environment option.
+- Added the straightedges environment option.
+- Added the graphstyle environment option.
+- Added the mathmode environment option.
+- Added the experimental scale environment option.
+
+[1] http://www.fauskes.net/code/dot2tex/
+[2] http://www.graphviz.org/

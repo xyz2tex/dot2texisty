@@ -1,0 +1,44 @@
+\documentclass[a4paper]{article}
+\usepackage{pstricks}
+\usepackage{pstricks-add}
+
+\usepackage[pstricks]{dot2texi}
+
+\begin{document}
+
+\begin{dot2tex}[mathmode,autosize]
+digraph G{
+    d2toptions="--nominsize";
+    a -> b;
+    a -> c;
+    b -> d;
+    d -> a;
+}
+\end{dot2tex}
+
+\begin{dot2tex}[dot]
+graph G {
+  node [shape=circle];
+	1 -- 2;
+	1 -- 5;
+	2 -- 5;
+	2 -- 4;
+	2 -- 3;
+	3 -- 4;
+}
+\end{dot2tex}
+
+\begin{dot2tex}[circo]
+digraph G {
+    graph [mindist=0.5];
+    node [texmode="math", fixedsize=true, shape=circle, width=0.4];
+    c -> n_1 [style="arrows=->"];
+    c -> n_2 [style="arrows=->>"];
+    c -> n_3 [style="arrows=-<"];
+    c -> n_4 [style="arrows=-*"];
+    c -> n_5 [style="arrows=-{]}"];
+    c -> n_6 [style="arrows=-o"];
+    c -> n_7 [style="arrows=-H"];
+}
+\end{dot2tex}
+\end{document}
