@@ -167,6 +167,10 @@
     \def\dtt@debugstr{--debug}
 \fi
 
+\@ifundefined{verbatim@out}{
+    \newwrite\verbatim@out
+}{}% 
+
 \define@choicekey*{dtt}{prog}[\progval\nr]{dot,neato,circo,fdp,twopi}[dot]{%
     \def\dtt@procprog{--prog=\progval}}
 \define@choicekey*{dtt}{format}[\outputval\nr]{tikz,pgf,pstricks}[tikz]{%
