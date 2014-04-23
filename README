@@ -6,8 +6,7 @@ The generated code relies on the TikZ and PGF package or the PSTricks package.
 Licensed under the GPL.
 Author: Kjell Magne Fauske
 
-Dot2tex can be downloaded from: http://www.fauskes.net/code/dot2tex/download/
-or CTAN: http://www.ctan.org/tex-archive/help/Catalogue/entries/dot2tex.html
+Dot2tex can be downloaded from: https://pypi.python.org/pypi/dot2tex#downloads .
 It is also available as binary packages for Debian and OpenSUSE.
 
 New in version 3.0
@@ -23,5 +22,5 @@ New in version 3.0
 - Added the mathmode environment option.
 - Added the experimental scale environment option.
 
-[1] http://www.fauskes.net/code/dot2tex/
+[1] https://pypi.python.org/pypi/dot2tex
 [2] http://www.graphviz.org/
