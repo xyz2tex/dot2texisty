@@ -10,17 +10,17 @@
 
 \title{The \texttt{dot2texi} package}
 \author{Kjell Magne Fauske\\\footnotesize{\url{https://github.com/kjellmf/dot2texisty}}}
-\date{Version 3.1}
+\date{Version 4.0dev}
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
-The \packagename\ package allows you to embed graphs written the DOT description language directly in your document. The dot2tex\footnote{Available from: \url{https://github.com/kjellmf/dot2texisty}}\footnote{and \url{http://www.ctan.org/tex-archive/help/Catalogue/entries/dot2tex.html}} tool is used to transform the output from Graphviz to \LaTeX\ code using either the TikZ and PGF package, or the PSTricks package. The generated code can then be included directly in you document. This package can automate the process if shell escape is enabled.
+The \packagename\ package allows you to embed graphs written the DOT description language directly in your document. The dot2tex\footnote{Available from: \url{https://github.com/kjellmf/dot2texisty}}\footnote{and \url{https://pypi.python.org/pypi/dot2tex}} tool is used to transform the output from Graphviz to \LaTeX\ code using either the TikZ and PGF package, or the PSTricks package. The generated code can then be included directly in you document. This package can automate the process if shell escape is enabled.
 \\
 
 \noindent
-This package is derived from the dottex\footnote{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/dottex.html}} and gnuplottex\footnote{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/gnuplottex.html}} packages written by Lars Kotthoff.
+This package is derived from the dottex\footnote{\url{http://www.ctan.org/pkg/dottex}} and gnuplottex\footnote{\url{http://www.ctan.org/pkg/gnuplottex}} packages written by Lars Kotthoff.
 
 \section{Requirements}
 
@@ -33,7 +33,7 @@ To run \packagename\ the following packages are required:
 In addition, the following external tools are required:
 \begin{itemize}
     \item Graphviz
-    \item dot2tex ( Version 2.7.0 or later recommended). The dot2texi package assumes that dot2tex is installed somewhere on the system path.
+    \item dot2tex ( Version 2.8.0 or later recommended). The dot2texi package assumes that dot2tex is installed somewhere on the system path.
 \end{itemize}
 
 
@@ -56,7 +56,6 @@ The following package options are recognized:
 \item[\oarg{shell}] Use shell escape to automatically generate \TeX code using do2tex. This is the default behavior.
 \item[\oarg{noshell}] Disable shell escape. Note that you can locally  enable and disable shell escape for each \texttt{dot2tex} environment.
 \item[\oarg{forceshell}] Force shell escape. Will run \texttt{dot2tex} on graphs even if they locally use the \oarg{noshell} option.
-\item[\oarg{miktex}] MikTeX compatibility mode.
 \item[\oarg{debug}] Invoke \texttt{dot2tex} in debug mode.
 \item[\oarg{autosize}] Invoke \texttt{dot2tex} with the \texttt{--autosize} option. Will preprocess the graph using the preview package and adjust node and edge label sizes so that they fit the LaTeX output.
 \item[\oarg{outputdir=dir}] Set a directory where the generated graph code will be stored. The default is to put the files in the current directory. The \emph{outputdir} value should have a trailing slash to ensure that it is interpreted as a directory. Example:
@@ -82,6 +81,14 @@ Set the default graph layout tool
 \item[\oarg{circo}] Circular layout
 \item[\oarg{fdp}] Spring model layout
 \item[\oarg{twopi}] Radial layout
+\end{description}
+
+\subsection{Labels}
+Set how \texttt{dot2tex} interprets labels
+\begin{description}
+\item[\oarg{raw}] Pass labels directly to \LaTeX
+\item[\oarg{math}] Put labels inside \verb|$..$|
+\item[\oarg{verbatim}] Escape special chars
 \end{description}
 
 \section{Macros}
@@ -157,7 +164,24 @@ The above code will generate the files \texttt{minimal.dot} and \texttt{minimal.
 
 \emph{Note:} If the \oarg{outputdir} option is set, its value will be prepended.
 \end{description}
-Options:
+
+Labels:
+\begin{description}
+
+
+\item[\oarg{texmode=mode}] Set how \texttt{dot2tex} interprets labels. Allowed values are {\verb#raw|math|verbatim#}.
+
+\item[\oarg{mathmode}] Same as \oarg{texmode=math}.
+
+\item[\oarg{math}] Same as \oarg{texmode=math}.
+
+\item[\oarg{raw}] Same as \oarg{texmode=raw}.
+
+\item[\oarg{verbatim}] Same as \oarg{texmode=verbatim}.
+
+\end{description}
+
+Other options:
 \begin{description}
 \item[\oarg{options=opts}] Pass additional command line options to \texttt{dot2tex}. See the dot2tex documentation\footnote{\url{http://www.fauskes.net/code/dot2tex/documentation/}} for available options.
 
@@ -200,7 +224,7 @@ The above style value will scale down the graph to half its size.
 
 \emph{Note:} Use curly braces around the style value to avoid confusing the xkeyval parser.
 
-\item[\oarg{mathmode}] Run \texttt{dot2tex} with tex mode set to math. This means that labels are interpreted as math.
+
 
 \item[\oarg{scale=factor}] Scale the graph by a factor. 
 
@@ -503,6 +527,18 @@ not be able to process the graph.
 \section{Changelog}
 
 \begin{itemize}
+\item Version 4.0 (not released yet)
+\begin{itemize}
+    \item Fixed undefined \verb|\verbatim@out| bug.
+    \item Added the \texttt{texmode} package and environment option.
+    \item Added the \texttt{raw} package and environment option.
+    \item Added the \texttt{mat} package and environment option.
+    \item Added the \texttt{verbatim} package and environment option.
+    
+    
+\end{itemize}
+
+
 \item Version 3.0 (2008-05-07)
 \begin{itemize}
     \item Updated documentation examples to use PGF 2.00.
@@ -529,7 +565,7 @@ not be able to process the graph.
 
 \section*{Acknowledgements}
 
-Thanks to Lars Kotthoff for writing the excellent dottex and gnuplottex packages. The platform detection code is based on the ifplatform\footnote{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/ifplatform.html}} package written by Will Robertson and Johannes Gro{\ss}e.
+Thanks to Lars Kotthoff for writing the excellent dottex and gnuplottex packages. The platform detection code is based on the ifplatform\footnote{\url{http://www.ctan.org/pkg/ifplatform}} package written by Will Robertson and Johannes Gro{\ss}e.
 
 Thanks to all users for valuable feedback and suggestions! A special thanks to Rolf Niepraschk for pointing me to the dottex and ifplatform packages.
 
