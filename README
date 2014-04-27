@@ -9,6 +9,17 @@ Author: Kjell Magne Fauske
 Dot2tex can be downloaded from: https://pypi.python.org/pypi/dot2tex#downloads .
 It is also available as binary packages for Debian and OpenSUSE.
 
+New in version 4.0
+------------------
+(Not released yet)
+
+- Fixed undefined \verbatim@out bug.
+- Added the texmode package and environment option.
+- Added the raw package and environment option.
+- Added the math package and environment option.
+- Added the verbatim package and environment option.
+
+
 New in version 3.0
 ------------------
 
