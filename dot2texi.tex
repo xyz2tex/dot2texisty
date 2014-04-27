@@ -9,14 +9,14 @@
 \newcommand\packagename{\texttt{dot2texi}}
 
 \title{The \texttt{dot2texi} package}
-\author{Kjell Magne Fauske\\\footnotesize{\url{http://www.fauskes.net/}}}
-\date{Version 3.0}
+\author{Kjell Magne Fauske\\\footnotesize{\url{https://github.com/kjellmf/dot2texisty}}}
+\date{Version 3.1}
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
-The \packagename\ package allows you to embed graphs written the DOT description language directly in your document. The dot2tex\footnote{Available from: \url{http://www.fauskes.net/code/dot2tex/}}\footnote{and \url{http://www.ctan.org/tex-archive/help/Catalogue/entries/dot2tex.html}} tool is used to transform the output from Graphviz to \LaTeX\ code using either the TikZ and PGF package, or the PSTricks package. The generated code can then be included directly in you document. This package can automate the process if shell escape is enabled.
+The \packagename\ package allows you to embed graphs written the DOT description language directly in your document. The dot2tex\footnote{Available from: \url{https://github.com/kjellmf/dot2texisty}}\footnote{and \url{http://www.ctan.org/tex-archive/help/Catalogue/entries/dot2tex.html}} tool is used to transform the output from Graphviz to \LaTeX\ code using either the TikZ and PGF package, or the PSTricks package. The generated code can then be included directly in you document. This package can automate the process if shell escape is enabled.
 \\
 
 \noindent
@@ -491,12 +491,14 @@ Sometimes it is practical to keep a dot graph in a separate file, for instance w
 
 \begin{verbatim}
 ...
-\begin{dot2tex}
+\begin{dot2tex}[]
 \input{externalgraph.dot}
 \end{dot2tex}
 ..
 \end{verbatim}
 
+Please note that you have to add the environment options brackets, \verb|[]|, even if there are no options. If not, it will trigger a bug in \packagename\ and dot2tex will 
+not be able to process the graph.
 
 \section{Changelog}
 
