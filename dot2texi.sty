@@ -60,6 +60,7 @@
 \ProvidesPackage{dot2texi}[2014/04/25 v3.1-dev Run dot2tex from LaTeX]
 \RequirePackage{moreverb}
 \RequirePackage{xkeyval}[2005/02/22]
+\RequirePackage{xstring}
 
 \newif\ifdtt@ShellEscape
 %\newif\ifmiktex \miktexfalse
@@ -229,6 +230,10 @@
 \define@key{dtt}{cache}[]{\def\dtt@cacheopt{--cache}}
 \define@key{dtt}{nocache}[]{\def\dtt@cacheopt{}}
 
+% force recompilation (e.g. the dot2tex options have changed in the latex file)
+\define@key{dtt}{force}[]{\def\dtt@force{--force}}
+\def\dtt@force{}
+
 \newif\ifdtt@writetofile \dtt@writetofiletrue
 
 \def\dottotexverbatimwrite#1{%
@@ -301,5 +306,35 @@
     {\PackageWarningNoLine{dot2texi}
             {Please convert \dtt@figname.dot manually}}
 }
+
+\newcommand\includedot[2][]{%
+	\noexpandarg%
+	\expandafter\StrSubstitute\expandafter{#2}{./}{_}[\x]%
+	\expandafter\StrSubstitute\expandafter{\x}{/}{_}[\x]%
+	\expandafter\StrSubstitute\expandafter{\x}{.dot}{.tex}[\x]%
+	%
+	\def\dtt@fname{\dtt@outputdir\pathtofname{#2}}%
+	\setkeys{dtt}{#1}{%
+		\ifdtt@ShellEscape%
+			\immediate\write18{
+				dot2tex
+					\dtt@output\space
+					\dtt@format\space
+					\dtt@tikzedgelabels\space
+					\dtt@straightedges\space
+					\dtt@styleonly\space
+					\dtt@autosizeopt\space
+					\dtt@debugstr\space
+					\dtt@procprog\space
+					\dtt@mathmode\space
+					\dtt@graphstyle\space
+					\dtt@force\space
+					-o \dtt@outputdir/\x
+					\dtt@options\space #2
+			}%
+		\fi%
+		\input{\dtt@outputdir/\x}%
+	}
+}%
 
 \endinput
