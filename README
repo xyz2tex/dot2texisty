@@ -13,6 +13,8 @@ New in version 4.0
 ------------------
 (Not released yet)
 
+- Added \includedot command for including external dot files.
+- Added xstring as a dependency (http://www.ctan.org/pkg/xstring)
 - Fixed undefined \verbatim@out bug.
 - Added the texmode package and environment option.
 - Added the raw package and environment option.
