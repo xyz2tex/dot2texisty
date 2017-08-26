@@ -102,6 +102,8 @@
 % Option for setting an output directory
 \DeclareOptionX{outputdir}[]{\def\dtt@outputdir{#1}}
 \def\dtt@outputdir{}
+\DeclareOptionX{inputdir}[]{\def\dtt@inputdir{#1}}
+\def\dtt@inputdir{}
 \DeclareOptionX{debug}{\dtt@debugtrue}
 
 \newcommand\setoutputdir[1]{\def\dtt@outputdir{#1}}
@@ -292,7 +294,7 @@
                 \dtt@mathmode\space
                 \dtt@graphstyle\space
                 \dtt@cacheopt\space
-                -o \dtt@figname.tex \dtt@options\space \dtt@figname.dot}
+                -o \dtt@inputdir\dtt@figname.tex \dtt@options\space \dtt@inputdir\dtt@figname.dot}
             \IfFileExists{\dtt@figname.tex}{%
                 \PackageInfo{dot2texo}{\dtt@figname.dot converted}
             }
